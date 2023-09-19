@@ -1,2 +1,8 @@
 __pycache__/*
 models/__pycache__/*
+.data/imdb/*
+.data\\imdb\\*
+.data\imdb\*
+.data/imdb
+.data/imdb/aclImdb_v1.tar.gz
+.vector_cache/*
