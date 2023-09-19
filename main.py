@@ -104,7 +104,7 @@ test_sen1 = [[TEXT.vocab.stoi[x] for x in test_sen1]]
 test_sen2 = TEXT.preprocess(test_sen2)
 test_sen2 = [[TEXT.vocab.stoi[x] for x in test_sen2]]
 
-test_sen = np.asarray(test_sen1)
+test_sen = np.asarray(test_sen2)
 test_sen = torch.LongTensor(test_sen)
 
 with torch.no_grad():
