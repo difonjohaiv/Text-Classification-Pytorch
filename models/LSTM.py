@@ -10,7 +10,7 @@ class LSTMClassifier(nn.Module):
 
     def __init__(self, batch_size, output_size, hidden_size, vocab_size,
                  embedding_length, weights):
-        super(LSTMClassifier, self).__init__()
+        super(LSTMClassifier, self).__init__()  # 调用父类的构造函数，确保模型初始化
         """
         Arguments
         ---------
@@ -29,12 +29,12 @@ class LSTMClassifier(nn.Module):
         self.embedding_length = embedding_length
 
         self.word_embeddings = nn.Embedding(
-            vocab_size, embedding_length)  # Initializing the look-up table.
+            vocab_size, embedding_length)  # Initializing the look-up table. 创建一个词嵌入查找表（embedding lookup table）用于存储单词嵌入。
         self.word_embeddings.weight = nn.Parameter(
-            weights, requires_grad=False
+            weights, requires_grad=False  # 这里的weights就是传进来的word_embeddings。词表的每个单词的embedding向量
         )  # Assigning the look-up table to the pre-trained GloVe word embedding.
-        self.lstm = nn.LSTM(embedding_length, hidden_size)
-        self.label = nn.Linear(hidden_size, output_size)
+        self.lstm = nn.LSTM(embedding_length, hidden_size)  # LSTM层 输入维度，中间层维度
+        self.label = nn.Linear(hidden_size, output_size)  # 输出层 中间层维度，输出维度
 
     def forward(self, input_sentence, batch_size=None):
         """

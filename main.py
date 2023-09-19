@@ -25,8 +25,8 @@ def train_model(model, train_iter, epoch):
     steps = 0
     model.train()
     for idx, batch in enumerate(train_iter):
-        text = batch.text[0]
-        target = batch.label
+        text = batch.text[0]  # 加载文本
+        target = batch.label  # 加载标签
         target = torch.autograd.Variable(target).long()
         if torch.cuda.is_available():
             text = text.cuda()
@@ -86,8 +86,8 @@ model = LSTMClassifier(batch_size, output_size, hidden_size, vocab_size, embeddi
 loss_fn = F.cross_entropy
 
 for epoch in range(10):
-    train_loss, train_acc = train_model(model, train_iter, epoch)
-    val_loss, val_acc = eval_model(model, valid_iter)
+    train_loss, train_acc = train_model(model, train_iter, epoch)  # 训练模型
+    val_loss, val_acc = eval_model(model, valid_iter)  # 验证模型
 
     print(f'Epoch: {epoch+1:02}, Train Loss: {train_loss:.3f}, Train Acc: {train_acc:.2f}%, Val. Loss: {val_loss:3f}, Val. Acc: {val_acc:.2f}%')
 
