@@ -25,8 +25,8 @@ def train_model(model, train_iter, epoch):
     steps = 0
     model.train()
     for idx, batch in enumerate(train_iter):
-        text = batch.text[0]  # 加载文本
-        target = batch.label  # 加载标签
+        text = batch.text[0]  # 加载文本 32 * 200 一个batch里有32挑句子，每个句子的max长度为200
+        target = batch.label  # 加载标签 32 标签为01，这是一个情感分类数据集IMDB
         target = torch.autograd.Variable(target).long()
         if torch.cuda.is_available():
             text = text.cuda()
@@ -35,8 +35,8 @@ def train_model(model, train_iter, epoch):
             continue
         optim.zero_grad()
         prediction = model(text)
-        loss = loss_fn(prediction, target)
-        num_corrects = (torch.max(prediction, 1)[1].view(target.size()).data == target.data).float().sum()
+        loss = loss_fn(prediction, target)  # 计算损失
+        num_corrects = (torch.max(prediction, 1)[1].view(target.size()).data == target.data).float().sum()  # 情感预测正确的个数
         acc = 100.0 * num_corrects / len(batch)
         loss.backward()
         clip_gradient(model, 1e-1)
@@ -82,6 +82,7 @@ output_size = 2
 hidden_size = 256
 embedding_length = 300
 
+# 每个词的向量维度是：300
 model = LSTMClassifier(batch_size, output_size, hidden_size, vocab_size, embedding_length, word_embeddings)
 loss_fn = F.cross_entropy
 
