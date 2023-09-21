@@ -8,6 +8,7 @@ from torch.autograd import Variable
 # import torch.optim as optim
 import numpy as np
 from models.LSTM import LSTMClassifier
+from models.RNN import RNN
 
 TEXT, vocab_size, word_embeddings, train_iter, valid_iter, test_iter = load_data.load_dataset()
 
@@ -85,6 +86,7 @@ embedding_length = 300
 
 # 每个词的向量维度是：300
 model = LSTMClassifier(batch_size, output_size, hidden_size, vocab_size, embedding_length, word_embeddings)
+# model = RNN(batch_size, output_size, hidden_size, vocab_size, embedding_length, word_embeddings)
 loss_fn = F.cross_entropy
 
 for epoch in range(10):

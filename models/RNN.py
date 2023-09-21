@@ -36,35 +36,37 @@ class RNN(nn.Module):
                           bidirectional=True)
         self.label = nn.Linear(4 * hidden_size, output_size)
 
-        def forward(self, input_sentences, batch_size=None):
-            """
-            Parameters
-            ----------
-            input_sentence: input_sentence of shape = (batch_size, num_sequences)
-            batch_size : default = None. Used only for prediction on a single sentence after training (batch_size = 1)
+    def forward(self, input_sentences, batch_size=None):
+        """
+        Parameters
+        ----------
+        input_sentence: input_sentence of shape = (batch_size, num_sequences)
+        batch_size : default = None. Used only for prediction on a single sentence after training (batch_size = 1)
 
-            Returns
-            -------
-            Output of the linear layer containing logits for pos & neg class which receives its input as the final_hidden_state of RNN.
-            logits.size() = (batch_size, output_size)
+        Returns
+        -------
+        Output of the linear layer containing logits for pos & neg class which receives its input as the final_hidden_state of RNN.
+        logits.size() = (batch_size, output_size)
 
-            """
+        """
 
-            input = self.word_embeddings(input_sentences)
-            input = input.permute(1, 0, 2)
-            if batch_size is None:
-                h_0 = Variable(
-                    torch.zeros(
-                        4, self.batch_size,
-                        self.hidden_size).cuda())  # 4 = num_layers*num_directions
-            else:
-                h_0 = Variable(torch.zeros(4, batch_size, self.hidden_size).cuda())
+        input = self.word_embeddings(input_sentences)
+        input = input.permute(1, 0, 2)
+        if batch_size is None:
+            h_0 = Variable(
+                torch.zeros(
+                    4, self.batch_size,
+                    self.hidden_size).cuda())  # 4 = num_layers*num_directions
+        else:
+            h_0 = Variable(torch.zeros(4, batch_size, self.hidden_size).cuda())
             output, h_n = self.rnn(input, h_0)
             # h_n.size() = (4, batch_size, hidden_size)
-            h_n = h_n.permute(1, 0, 2)  # h_n.size() = (batch_size, 4, hidden_size)
+            h_n = h_n.permute(1, 0,
+                              2)  # h_n.size() = (batch_size, 4, hidden_size)
             h_n = h_n.contiguous().view(h_n.size()[0],
                                         h_n.size()[1] * h_n.size()[2])
             # h_n.size() = (batch_size, 4*hidden_size)
-            logits = self.label(h_n)  # logits.size() = (batch_size, output_size)
+            logits = self.label(
+                h_n)  # logits.size() = (batch_size, output_size)
 
             return logits
